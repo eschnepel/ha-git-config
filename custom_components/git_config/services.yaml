@@ -1,0 +1,9 @@
+commit_push:
+  fields:
+    message:
+      required: false
+      selector:
+        text:
+          multiline: true
+fetch:
+pull:

@@ -1,0 +1,3 @@
+# Secrets never leave the system
+
+`.storage/` (which holds the Deploy Key and all credentials) and `secrets.yaml` are Protected Entries: re-added to the Managed Ignore Block whenever missing, untracked from the index before each commit, and a commit or push is refused if either would still be staged. Pulls are refused outright if the remote touches them, so remote content never overwrites them locally. This is deliberately not configurable, trading flexibility (e.g. versioning `secrets.yaml` in a private repo) for a guarantee that a UI mistake cannot leak credentials. History is never rewritten; secrets found in existing history only raise a rotation warning.

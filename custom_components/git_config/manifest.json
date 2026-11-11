@@ -1,0 +1,15 @@
+{
+  "domain": "git_config",
+  "name": "Git Config",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "after_dependencies": ["repairs"],
+  "documentation": "https://github.com/OWNER/ha-git-config",
+  "integration_type": "service",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/OWNER/ha-git-config/issues",
+  "requirements": ["dulwich>=1.2,<2", "paramiko>=3.4,<6"],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

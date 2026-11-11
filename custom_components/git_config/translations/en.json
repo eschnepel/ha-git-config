@@ -1,0 +1,182 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Git Config",
+        "description": "Put the Home Assistant configuration directory under git control. Only GitHub SSH remotes are supported.",
+        "data": {
+          "remote_url": "Remote URL",
+          "branch": "Branch",
+          "author_name": "Commit author name",
+          "author_email": "Commit author email"
+        },
+        "data_description": {
+          "remote_url": "SSH URL, for example git@github.com:owner/repo.git"
+        }
+      },
+      "key": {
+        "title": "Register the deploy key",
+        "description": "Add this public key as a deploy key **with write access** in the repository settings on GitHub, then continue.\n\n```\n{public_key}\n```"
+      }
+    },
+    "error": {
+      "invalid_url": "Enter an SSH URL of the form git@github.com:owner/repo.git.",
+      "invalid_branch": "Enter a valid branch name.",
+      "invalid_author": "Name and email must not be empty or contain < or >.",
+      "auth_failed": "GitHub rejected the deploy key. Check that it was added with write access.",
+      "host_key_mismatch": "The server's SSH host key does not match GitHub's published keys. The connection was refused.",
+      "remote_mismatch": "The configuration directory is already a repository with a different origin.",
+      "branch_mismatch": "The configuration directory is a repository with a different branch checked out.",
+      "unrelated_history": "The remote branch has history unrelated to the existing local repository.",
+      "not_found": "Repository not found. Check the URL and that the deploy key was added to this repository.",
+      "operation_failed": "The git operation failed. See the Home Assistant log for details."
+    },
+    "abort": {
+      "single_instance_allowed": "Git Config is already configured. Only one configuration is possible."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Git Config options",
+        "menu_options": {
+          "ignore": "Edit ignore entries",
+          "author": "Change commit author",
+          "key": "Regenerate deploy key"
+        }
+      },
+      "ignore": {
+        "title": "Ignore entries",
+        "description": "Edit the entries Git Config manages in `.gitignore`. Protected entries ({protected}) are always kept.",
+        "data": {
+          "remove": "Remove entries",
+          "add": "Add entries (one per line)"
+        }
+      },
+      "author": {
+        "title": "Commit author",
+        "data": {
+          "author_name": "Commit author name",
+          "author_email": "Commit author email"
+        }
+      },
+      "key": {
+        "title": "Regenerate deploy key",
+        "description": "Replace the deploy key on GitHub with this public key (with write access), then continue. The old key stops working once you submit.\n\n```\n{public_key}\n```"
+      }
+    },
+    "error": {
+      "invalid_entry": "Entries must not be empty, comments or negations (starting with # or !).",
+      "invalid_author": "Name and email must not be empty or contain < or >."
+    },
+    "abort": {
+      "not_loaded": "Git Config is not loaded; check the logs and try again."
+    }
+  },
+  "entity": {
+    "button": {
+      "commit_push": { "name": "Commit and push" },
+      "fetch": { "name": "Fetch" },
+      "pull": { "name": "Fetch and pull" }
+    },
+    "sensor": {
+      "behind": { "name": "Commits behind", "unit_of_measurement": "commits" },
+      "ahead": { "name": "Commits ahead", "unit_of_measurement": "commits" },
+      "pending": { "name": "Pending changes", "unit_of_measurement": "files" },
+      "last_fetch": { "name": "Last fetch" },
+      "last_error": { "name": "Last error" }
+    }
+  },
+  "exceptions": {
+    "not_loaded": { "message": "Git Config is not set up." },
+    "error_auth_failed": { "message": "GitHub rejected the deploy key. {detail}" },
+    "error_host_key_mismatch": { "message": "The SSH host key is not one of GitHub's published keys; connection refused. {detail}" },
+    "error_remote_mismatch": { "message": "The repository's origin differs from the configured remote: {detail}" },
+    "error_branch_mismatch": { "message": "The repository has a different branch checked out: {detail}" },
+    "error_unrelated_history": { "message": "The remote branch has unrelated history." },
+    "error_diverged": { "message": "Local and remote branches have diverged. Resolve this outside Home Assistant." },
+    "error_pending_changes": { "message": "There are pending changes. Commit and push them, or discard them, before pulling." },
+    "error_overwrite": { "message": "Pulling would overwrite local files: {detail}" },
+    "error_protected_in_remote": { "message": "The remote contains protected paths ({detail}); the pull was refused." },
+    "error_protected_staged": { "message": "Protected paths would have been committed ({detail}); the commit was refused." },
+    "error_behind_remote": { "message": "The remote has new commits. Fetch and pull before committing." },
+    "error_not_found": { "message": "Repository not found or deploy key not authorised. {detail}" },
+    "error_operation_failed": { "message": "Git operation failed: {detail}" }
+  },
+  "issues": {
+    "restart_required": {
+      "title": "Restart required after git pull",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Restart required",
+            "description": "The pulled changes cannot be reloaded without a restart: {reasons}. Restart Home Assistant now?"
+          }
+        }
+      }
+    },
+    "config_invalid": {
+      "title": "Pulled configuration is invalid",
+      "description": "The configuration pulled from git failed the configuration check, so nothing was reloaded or restarted. The files were left in place.\n\n{error}"
+    },
+    "pull_refused_pending_changes": {
+      "title": "Pull refused: pending changes",
+      "description": "There are uncommitted local changes. Commit and push them, or discard them outside Home Assistant."
+    },
+    "pull_refused_diverged": {
+      "title": "Pull refused: branches have diverged",
+      "description": "Local and remote branches both have new commits. Git Config never merges; resolve this outside Home Assistant."
+    },
+    "pull_refused_unrelated_history": {
+      "title": "Pull refused: unrelated history",
+      "description": "The remote branch shares no history with the local repository."
+    },
+    "pull_refused_protected_in_remote": {
+      "title": "Pull refused: protected files in remote",
+      "description": "The remote changes protected paths that must never leave this system: {detail}. Remove them from the remote repository outside Home Assistant."
+    },
+    "pull_refused_overwrite": {
+      "title": "Pull refused: would overwrite local files",
+      "description": "The pull would overwrite existing local files that are not tracked: {detail}"
+    },
+    "secrets_in_history": {
+      "title": "Secrets found in repository history",
+      "description": "`secrets.yaml` or `.storage/` appear in the repository history. Rotate the affected secrets and remove them from history outside Home Assistant; history is never rewritten automatically."
+    },
+    "auth_failed": {
+      "title": "GitHub rejected the deploy key",
+      "fix_flow": {
+        "step": {
+          "init": {
+            "title": "Replace the deploy key",
+            "description": "Register this new public key as a deploy key with write access on GitHub, then continue.\n\n```\n{public_key}\n```"
+          }
+        }
+      }
+    },
+    "host_key_mismatch": {
+      "title": "SSH host key mismatch",
+      "description": "The server presented an SSH host key that is not one of GitHub's published keys, so the connection was refused. If GitHub rotated its keys, update this integration."
+    }
+  },
+  "services": {
+    "commit_push": {
+      "name": "Commit and push",
+      "description": "Commit all pending changes and push them to the remote.",
+      "fields": {
+        "message": {
+          "name": "Message",
+          "description": "Commit message. A message with a changed-file summary is generated if omitted."
+        }
+      }
+    },
+    "fetch": {
+      "name": "Fetch",
+      "description": "Download remote commits without changing local files."
+    },
+    "pull": {
+      "name": "Fetch and pull",
+      "description": "Fetch, fast-forward and reload or flag a restart for the changed files."
+    }
+  }
+}
