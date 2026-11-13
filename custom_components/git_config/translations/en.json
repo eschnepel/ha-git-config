@@ -16,7 +16,7 @@
       },
       "key": {
         "title": "Register the deploy key",
-        "description": "Add this public key as a deploy key **with write access** in the repository settings on GitHub, then continue.\n\n```\n{public_key}\n```"
+        "description": "Add this public key as a deploy key **with write access** on GitHub ([open the deploy key page]({deploy_keys_url})), then continue.\n\n```\n{public_key}\n```"
       }
     },
     "error": {
@@ -62,7 +62,7 @@
       },
       "key": {
         "title": "Regenerate deploy key",
-        "description": "Replace the deploy key on GitHub with this public key (with write access), then continue. The old key stops working once you submit.\n\n```\n{public_key}\n```"
+        "description": "Replace the deploy key on GitHub ([open the deploy key page]({deploy_keys_url})) with this public key (with write access), then continue. The old key stops working once you submit.\n\n```\n{public_key}\n```"
       }
     },
     "error": {

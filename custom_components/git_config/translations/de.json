@@ -1,0 +1,182 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Git Config",
+        "description": "Stellt das Home-Assistant-Konfigurationsverzeichnis unter Git-Kontrolle. Es werden nur GitHub-SSH-Remotes unterstützt.",
+        "data": {
+          "remote_url": "Remote-URL",
+          "branch": "Branch",
+          "author_name": "Name des Commit-Autors",
+          "author_email": "E-Mail des Commit-Autors"
+        },
+        "data_description": {
+          "remote_url": "SSH-URL, zum Beispiel git@github.com:owner/repo.git"
+        }
+      },
+      "key": {
+        "title": "Deploy-Key registrieren",
+        "description": "Füge diesen öffentlichen Schlüssel auf GitHub als Deploy-Key **mit Schreibzugriff** hinzu ([Seite für Deploy-Keys öffnen]({deploy_keys_url})) und fahre dann fort.\n\n```\n{public_key}\n```"
+      }
+    },
+    "error": {
+      "invalid_url": "Gib eine SSH-URL der Form git@github.com:owner/repo.git ein.",
+      "invalid_branch": "Gib einen gültigen Branch-Namen ein.",
+      "invalid_author": "Name und E-Mail dürfen nicht leer sein und weder < noch > enthalten.",
+      "auth_failed": "GitHub hat den Deploy-Key abgelehnt. Prüfe, ob er mit Schreibzugriff hinzugefügt wurde.",
+      "host_key_mismatch": "Der SSH-Hostschlüssel des Servers stimmt nicht mit den veröffentlichten Schlüsseln von GitHub überein. Die Verbindung wurde abgelehnt.",
+      "remote_mismatch": "Das Konfigurationsverzeichnis ist bereits ein Repository mit einem anderen Origin.",
+      "branch_mismatch": "Im Konfigurationsverzeichnis ist ein Repository mit einem anderen ausgecheckten Branch.",
+      "unrelated_history": "Der Remote-Branch hat eine Historie, die nichts mit dem vorhandenen lokalen Repository zu tun hat.",
+      "not_found": "Repository nicht gefunden. Prüfe die URL und ob der Deploy-Key zu diesem Repository hinzugefügt wurde.",
+      "operation_failed": "Die Git-Operation ist fehlgeschlagen. Details stehen im Home-Assistant-Log."
+    },
+    "abort": {
+      "single_instance_allowed": "Git Config ist bereits eingerichtet. Es ist nur eine Konfiguration möglich."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Git-Config-Optionen",
+        "menu_options": {
+          "ignore": "Ignore-Einträge bearbeiten",
+          "author": "Commit-Autor ändern",
+          "key": "Deploy-Key neu erzeugen"
+        }
+      },
+      "ignore": {
+        "title": "Ignore-Einträge",
+        "description": "Bearbeite die Einträge, die Git Config in `.gitignore` verwaltet. Geschützte Einträge ({protected}) bleiben immer erhalten.",
+        "data": {
+          "remove": "Einträge entfernen",
+          "add": "Einträge hinzufügen (einer pro Zeile)"
+        }
+      },
+      "author": {
+        "title": "Commit-Autor",
+        "data": {
+          "author_name": "Name des Commit-Autors",
+          "author_email": "E-Mail des Commit-Autors"
+        }
+      },
+      "key": {
+        "title": "Deploy-Key neu erzeugen",
+        "description": "Ersetze den Deploy-Key auf GitHub ([Seite für Deploy-Keys öffnen]({deploy_keys_url})) durch diesen öffentlichen Schlüssel (mit Schreibzugriff) und fahre dann fort. Der alte Schlüssel funktioniert nach dem Absenden nicht mehr.\n\n```\n{public_key}\n```"
+      }
+    },
+    "error": {
+      "invalid_entry": "Einträge dürfen nicht leer, Kommentare oder Negationen sein (beginnend mit # oder !).",
+      "invalid_author": "Name und E-Mail dürfen nicht leer sein und weder < noch > enthalten."
+    },
+    "abort": {
+      "not_loaded": "Git Config ist nicht geladen; prüfe die Logs und versuche es erneut."
+    }
+  },
+  "entity": {
+    "button": {
+      "commit_push": { "name": "Committen und pushen" },
+      "fetch": { "name": "Fetch" },
+      "pull": { "name": "Fetch und Pull" }
+    },
+    "sensor": {
+      "behind": { "name": "Commits hinterher", "unit_of_measurement": "Commits" },
+      "ahead": { "name": "Commits voraus", "unit_of_measurement": "Commits" },
+      "pending": { "name": "Ausstehende Änderungen", "unit_of_measurement": "Dateien" },
+      "last_fetch": { "name": "Letzter Fetch" },
+      "last_error": { "name": "Letzter Fehler" }
+    }
+  },
+  "exceptions": {
+    "not_loaded": { "message": "Git Config ist nicht eingerichtet." },
+    "error_auth_failed": { "message": "GitHub hat den Deploy-Key abgelehnt. {detail}" },
+    "error_host_key_mismatch": { "message": "Der SSH-Hostschlüssel gehört nicht zu den veröffentlichten Schlüsseln von GitHub; Verbindung abgelehnt. {detail}" },
+    "error_remote_mismatch": { "message": "Der Origin des Repositorys weicht vom konfigurierten Remote ab: {detail}" },
+    "error_branch_mismatch": { "message": "Im Repository ist ein anderer Branch ausgecheckt: {detail}" },
+    "error_unrelated_history": { "message": "Der Remote-Branch hat eine unabhängige Historie." },
+    "error_diverged": { "message": "Lokaler und Remote-Branch sind auseinandergelaufen. Löse dies außerhalb von Home Assistant." },
+    "error_pending_changes": { "message": "Es gibt ausstehende Änderungen. Committe und pushe sie oder verwirf sie, bevor du pullst." },
+    "error_overwrite": { "message": "Der Pull würde lokale Dateien überschreiben: {detail}" },
+    "error_protected_in_remote": { "message": "Der Remote enthält geschützte Pfade ({detail}); der Pull wurde abgelehnt." },
+    "error_protected_staged": { "message": "Geschützte Pfade wären committet worden ({detail}); der Commit wurde abgelehnt." },
+    "error_behind_remote": { "message": "Der Remote hat neue Commits. Führe Fetch und Pull aus, bevor du committest." },
+    "error_not_found": { "message": "Repository nicht gefunden oder Deploy-Key nicht autorisiert. {detail}" },
+    "error_operation_failed": { "message": "Git-Operation fehlgeschlagen: {detail}" }
+  },
+  "issues": {
+    "restart_required": {
+      "title": "Neustart nach Git-Pull erforderlich",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Neustart erforderlich",
+            "description": "Die gepullten Änderungen können ohne Neustart nicht neu geladen werden: {reasons}. Home Assistant jetzt neu starten?"
+          }
+        }
+      }
+    },
+    "config_invalid": {
+      "title": "Gepullte Konfiguration ist ungültig",
+      "description": "Die aus Git gepullte Konfiguration hat die Konfigurationsprüfung nicht bestanden, daher wurde nichts neu geladen oder neu gestartet. Die Dateien wurden unverändert belassen.\n\n{error}"
+    },
+    "pull_refused_pending_changes": {
+      "title": "Pull abgelehnt: ausstehende Änderungen",
+      "description": "Es gibt nicht committete lokale Änderungen. Committe und pushe sie oder verwirf sie außerhalb von Home Assistant."
+    },
+    "pull_refused_diverged": {
+      "title": "Pull abgelehnt: Branches sind auseinandergelaufen",
+      "description": "Lokaler und Remote-Branch haben beide neue Commits. Git Config führt nie Merges durch; löse dies außerhalb von Home Assistant."
+    },
+    "pull_refused_unrelated_history": {
+      "title": "Pull abgelehnt: unabhängige Historie",
+      "description": "Der Remote-Branch hat keine gemeinsame Historie mit dem lokalen Repository."
+    },
+    "pull_refused_protected_in_remote": {
+      "title": "Pull abgelehnt: geschützte Dateien im Remote",
+      "description": "Der Remote ändert geschützte Pfade, die dieses System nie verlassen dürfen: {detail}. Entferne sie außerhalb von Home Assistant aus dem Remote-Repository."
+    },
+    "pull_refused_overwrite": {
+      "title": "Pull abgelehnt: würde lokale Dateien überschreiben",
+      "description": "Der Pull würde vorhandene lokale Dateien überschreiben, die nicht versioniert sind: {detail}"
+    },
+    "secrets_in_history": {
+      "title": "Geheimnisse in der Repository-Historie gefunden",
+      "description": "`secrets.yaml` oder `.storage/` tauchen in der Repository-Historie auf. Rotiere die betroffenen Geheimnisse und entferne sie außerhalb von Home Assistant aus der Historie; die Historie wird nie automatisch umgeschrieben."
+    },
+    "auth_failed": {
+      "title": "GitHub hat den Deploy-Key abgelehnt",
+      "fix_flow": {
+        "step": {
+          "init": {
+            "title": "Deploy-Key ersetzen",
+            "description": "Registriere diesen neuen öffentlichen Schlüssel auf GitHub als Deploy-Key mit Schreibzugriff und fahre dann fort.\n\n```\n{public_key}\n```"
+          }
+        }
+      }
+    },
+    "host_key_mismatch": {
+      "title": "SSH-Hostschlüssel stimmt nicht überein",
+      "description": "Der Server hat einen SSH-Hostschlüssel präsentiert, der nicht zu den veröffentlichten Schlüsseln von GitHub gehört, daher wurde die Verbindung abgelehnt. Falls GitHub seine Schlüssel rotiert hat, aktualisiere diese Integration."
+    }
+  },
+  "services": {
+    "commit_push": {
+      "name": "Committen und pushen",
+      "description": "Committet alle ausstehenden Änderungen und pusht sie zum Remote.",
+      "fields": {
+        "message": {
+          "name": "Nachricht",
+          "description": "Commit-Nachricht. Wird sie weggelassen, wird eine Nachricht mit einer Zusammenfassung der geänderten Dateien erzeugt."
+        }
+      }
+    },
+    "fetch": {
+      "name": "Fetch",
+      "description": "Lädt Remote-Commits herunter, ohne lokale Dateien zu ändern."
+    },
+    "pull": {
+      "name": "Fetch und Pull",
+      "description": "Führt Fetch und Fast-Forward aus und lädt die geänderten Dateien neu oder markiert einen Neustart."
+    }
+  }
+}

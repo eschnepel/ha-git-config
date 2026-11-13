@@ -53,6 +53,12 @@ _KNOWN_ERRORS = {
 }
 
 
+def _deploy_keys_url(remote_url: str) -> str:
+    """Return the GitHub page where deploy keys are added for the remote."""
+    path = remote_url.split(":", 1)[1].removesuffix(".git")
+    return f"https://github.com/{path}/settings/keys/new"
+
+
 def _author_schema(name: str, email: str) -> dict[Any, Any]:
     return {
         vol.Required(CONF_AUTHOR_NAME, default=name): str,
@@ -153,7 +159,10 @@ class GitConfigFlow(ConfigFlow, domain=DOMAIN):
                 )
         return self.async_show_form(
             step_id="key",
-            description_placeholders={"public_key": self._public},
+            description_placeholders={
+                "public_key": self._public,
+                "deploy_keys_url": _deploy_keys_url(self._input[CONF_REMOTE_URL]),
+            },
             errors=errors,
         )
 
@@ -241,5 +250,11 @@ class GitConfigOptionsFlow(OptionsFlow):
             async_store_keypair(self.hass, self.config_entry, self._private, self._public)
             return self.async_create_entry(data=dict(self.config_entry.options))
         return self.async_show_form(
-            step_id="key", description_placeholders={"public_key": self._public}
+            step_id="key",
+            description_placeholders={
+                "public_key": self._public,
+                "deploy_keys_url": _deploy_keys_url(
+                    self.config_entry.data[CONF_REMOTE_URL]
+                ),
+            },
         )
